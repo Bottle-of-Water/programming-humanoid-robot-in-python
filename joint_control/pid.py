@@ -29,15 +29,16 @@ class PIDController(object):
         @param size: number of control values
         @param delay: delay in number of steps
         '''
-        self.dt = dt
-        self.u = np.zeros(size)
-        self.e1 = np.zeros(size)
-        self.e2 = np.zeros(size)
+        self.dt = dt #time 
+        self.u = np.zeros(size) #signal 
+        self.e1 = np.zeros(size) #e(t-1)
+        self.e2 = np.zeros(size) #e(t-2)
         # ADJUST PARAMETERS BELOW
-        delay = 0
-        self.Kp = 0
-        self.Ki = 0
-        self.Kd = 0
+        
+        delay = 0 #is negligible 
+        self.Kp = 20
+        self.Ki = 0.01
+        self.Kd = 0.1
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -52,10 +53,15 @@ class PIDController(object):
         @param sensor: current values from sensor
         @return control signal
         '''
-        # YOUR CODE HERE
+        et = target - sensor  # error at time t 
+        self.u += (((self.Kp + (self.Ki * self.dt) + (self.Kd / self.dt)) * et) 
+        - (self.Kp + ((2 * self.Kd) / self.dt)) * self.e1 + (self.Kd / self.dt) * self.e2)
 
-        return self.u
-
+        #adjust e1 and e2 
+        self.e2 = self.e1 
+        self.e1 = et      
+        
+        return self.u 
 
 class PIDAgent(SparkAgent):
     def __init__(self, simspark_ip='localhost',
