@@ -85,38 +85,9 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
                 [0, 0, 0, 1]
             ]
 
-        '''
-        elif joint_name == 'LHipYawPitch' or joint_name == 'RHipYawPitch':
-            Tx = identity(4)
-            Tx = [
-                [1, 0, 0, joint_length],
-                [0, c, -s, 0],
-                [0, s, c, 0],
-                [0, 0, 0, 1]
-            ]
-            Ty = identity(4)
-            Ty = [
-                [c, 0, s, joint_length],
-                [0, 1, 0, 0],
-                [-s, 0, c, 0],
-                [0, 0, 0, 1]
-            ]
-            Tz = identity(4)
-            Tz = [
-                [c, -s, 0, joint_length],
-                [s, c, 0, 0],
-                [0, 0, 1, 0],
-                [0, 0, 0, 1]
-            ]
-            T = Tx*Ty*Tz
-        '''
-        #print(f"Joint: {joint_name}, Angle: {joint_angle}, Length: {joint_length}")
-        #print(f"Local Transformation: {T}")
-
         return T
 
     def addTorsoOffsets (self, T, chain_joints):
-        #Add Torso offsets from documentation
         if chain_joints == 'Head':
             T = T + [
                     [0, 0, 0, 0],
@@ -159,7 +130,6 @@ class ForwardKinematicsAgent(PostureRecognitionAgent):
 
         :param joints: {joint_name: joint_angle}
         '''
-        #From Documentation
         joint_lengths = {'HeadYaw': 0, 'HeadPitch': 0, 
                         'LShoulderPitch': 0, 'LShoulderRoll': 0.105, 'LElbowYaw':  0, 'LElbowRoll': 0.05595,
                         'RShoulderPitch': 0, 'RShoulderRoll': 0.105, 'RElbowYaw': 0, 'RElbowRoll': 0.05595,
